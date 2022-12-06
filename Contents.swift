@@ -209,3 +209,39 @@ do {
 }
 
 
+// Closures - Passing functions around
+func greetUser(user: String) {
+    print("Welcome \(user)")
+}
+
+let greetCopy: (String) -> Void = greetUser
+
+greetCopy("Taylor")
+
+let sayHello =  { (name: String) -> String in
+    return "Hi \(name)"
+}
+
+print(sayHello("Vanchi"))
+
+var team = ["Karen", "Messi", "Ronaldo", "Kalande", "Tesa"]
+
+func captainFirst(name1: String, name2: String) -> Bool {
+    if name1 == "Messi" {
+        return true
+    } else if name2 == "Messi" {
+        return false
+    }else {
+        return name1 < name2
+    }
+}
+
+print(team.sorted(by: {(name1: String, name2 : String) -> Bool in
+    if name1 == "Messi" {
+        return true
+    } else if name2 == "Messi" {
+        return false
+    }else {
+        return name1 < name2
+    }
+}))

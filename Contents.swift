@@ -245,3 +245,220 @@ print(team.sorted(by: {(name1: String, name2 : String) -> Bool in
         return name1 < name2
     }
 }))
+
+// Arguments can be represented as $0 or $1
+
+let kOnlyNames = team.filter { $0.hasPrefix("K")}
+print(kOnlyNames)
+
+let uppercasedTeam = team.map { $0.uppercased()}
+print(uppercasedTeam)
+
+// functions accepting closures as aruguments
+
+func makeArray(size: Int, using generator: () -> Int) -> [Int] {
+     var result = [Int]()
+    
+    for _ in 0..<size {
+        var number = generator()
+        result.append(number)
+    }
+    
+    return result
+}
+
+let numberArray = makeArray(size: 10, using: { Int.random(in: 0...100)})
+print(numberArray)
+
+
+// Checkpoint
+let luckyNumbers = [7,14,38,21,16,15,12,33,31,40]
+
+luckyNumbers.filter{
+    $0 % 2 == 0
+}.sorted().map {
+    print("\($0) is a lucky number")
+}
+
+
+// Structs
+// Double is a struct
+
+struct Movie {
+    let name: String
+    let year: Int
+    let leadActor: String
+    // This var will not be part of the initializers
+    var views: Int = 100_000_000
+    
+    mutating func addViews(view : Int) {
+        views += view
+    }
+}
+
+var tommorowNeverDies = Movie(name: "", year: 2005, leadActor: "Daniel")
+tommorowNeverDies.addViews(view: 10223)
+print(tommorowNeverDies.views)
+
+// Property observers
+// didSet and willSet
+struct Game {
+    var score = 0 {
+        didSet {
+            print("Score is now \(score)")
+        }
+    }
+}
+
+var game = Game()
+game.score += 10
+game.score -= 3
+game.score += 1
+
+struct App {
+    var contacts = [String]() {
+        didSet {
+            print("New Contacts \(contacts)")
+            print("Old Value = \(oldValue)")
+        }
+        willSet {
+            print("Current Contact: \(contacts)")
+            print("New Value = \(newValue)")
+        }
+    }
+}
+
+var app = App()
+app.contacts.append("Apple")
+app.contacts.append("Amazon")
+
+// Custom Initializers
+struct Player {
+    let name :  String
+    let id: Int
+    
+    init(name: String, id: Int) {
+        self.name = name
+        self.id = id
+    }
+    
+    func printPlayerInfo(){
+        print("Name: \(self.name) and id: \(self.id)")
+    }
+}
+
+var player = Player(name: "Vanchi", id: 1)
+player.printPlayerInfo()
+
+// Access control
+struct BankAccount {
+    // Private ensures no one can access the funds information
+    // fileprivate and public are other access control attributes
+    // private(set) - read only
+    private var funds = 0
+    
+    mutating func deposit(amount: Int) {
+        funds += amount
+    }
+    
+    mutating func withdraw(amount: Int) -> Bool {
+        if funds >= amount {
+            funds -= amount
+            return true
+        }
+        
+        return false
+    }
+}
+
+var bank = BankAccount()
+bank.deposit(amount: 100)
+let withdrawalResult = bank.withdraw(amount: 200)
+print(withdrawalResult)
+
+
+// Static properties and methods
+
+// Classes
+// Supports inheritence
+// Needs its own initializers
+// deinitializers are possible
+
+class SnakeGame {
+    var score = 0 {
+        didSet{
+            print("Old score: \(oldValue)")
+            print("The new score is \(self.score)")
+        }
+    }
+}
+
+var snakeGame = SnakeGame()
+snakeGame.score = 10
+
+// Inheritence of classes
+class Employee {
+    var hours: Int
+    init(hours : Int){
+        self.hours = hours
+    }
+    
+    func printSummary(){
+        print("I work \(self.hours) hours")
+    }
+}
+
+
+class Developer : Employee {
+    func work(){
+        print("I have been coding for \(self.hours) hours")
+    }
+    // Overriding print Summary here
+    override func printSummary() {
+        print("I'm a great engineer")
+    }
+}
+
+var developer = Developer(hours: 60)
+developer.printSummary()
+
+
+// Structs and Classes differ in how their instances are copied. Classes are reference types
+// Structs are not reference types
+class User {
+    var name : String
+    
+    init(name: String){
+        self.name = name
+        print("Initializing a player")
+    }
+    
+    deinit {
+        print("DeInitializing a Player")
+    }
+}
+
+for i in 1...3 {
+    let user = User(name: String(i))
+    print(user.name)
+}
+
+// Protocols
+protocol Vehicle {
+    func estimateTime(for distance: Int) -> Int
+    func travel(distance: Int)
+}
+
+struct Car: Vehicle {
+    func estimateTime(for distance: Int) -> Int {
+        return distance/50
+    }
+    
+    func travel(distance: Int) {
+        print("Im traveling for \(distance) miles")
+    }
+    
+    func openSunroof(){
+        print("Opening sunroof!!")
+    }
+}
